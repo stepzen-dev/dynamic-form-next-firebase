@@ -1,0 +1,54 @@
+type Form_field {
+  field: String
+  label: String
+  type: String
+}
+
+type Firebase_Event {
+  form_fields: [Form_field]
+  id: String
+  location: String
+  name: String
+}
+
+type Firebase_Person {
+  address: String
+  email: String
+  event_ids: [String]
+  id: String
+  name: String
+  phone: String
+  """
+  Events that a person has been to.
+  """
+  events: [Firebase_Event]
+    @materializer(
+      query: "event_list_by_id"
+      arguments: [
+        { name: "id", field: "event_ids" }
+      ]
+    )
+}
+
+type Query {
+  """
+  Equivalent To GET /api/events
+  """
+  firebase_events: [Firebase_Event]
+    @rest(endpoint: "https://graphqlbackend.ngrok.io/api/events")
+  """
+  Equivalent To GET /api/events/id
+  """
+  firebase_event_by_id(id: String!): Firebase_Event
+    @rest(endpoint: "https://graphqlbackend.ngrok.io/api/event/$id")
+  """
+  Equivalent To GET /api/eventList?id=$id
+  """
+  event_list_by_id(id: [String]): [Firebase_Event]
+    @rest(endpoint: "https://graphqlbackend.ngrok.io/api/eventList?")
+  """
+  Equivalent To GET /api/person?email=$email
+  """
+  firebase_person(email: String!): Firebase_Person
+    @rest(endpoint: "https://graphqlbackend.ngrok.io/api/person?email=$email")
+}
