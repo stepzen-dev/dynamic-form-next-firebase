@@ -12,6 +12,12 @@ export interface Event {
   form_fields: FormField[];
 }
 
+export interface Owner {
+  id: string;
+  name: string;
+  event_ids: String[];
+}
+
 export interface Data {
   form_data: Record<string, string | boolean>;
 }

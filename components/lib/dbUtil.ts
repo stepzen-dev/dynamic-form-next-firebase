@@ -1,4 +1,4 @@
-import { Person, Event } from "../lib/types";
+import { Person, Event, Owner } from "../lib/types";
 import db from "./db";
 
 // ==================== PERSON
@@ -47,15 +47,27 @@ export async function readEvent(id: string): Promise<Event> {
   return docRef.data() as Event;
 }
 
+
 export async function updateEvent(event: Event): Promise<void> {
   await db.collection("Event").doc(event.id).update(event);
 }
+
 
 export async function readEvents(): Promise<Event[]> {
   const eventsSnaps = await db.collection("Event").get();
   
   const events: Event[] = eventsSnaps.docs.map(
     (value) => value.data() as Event
-  );
-  return events;
-}
+    );
+    return events;
+  }
+  
+  export async function readOwner(id: string): Promise<Owner> {
+    const docRef = await db.collection("Owner").doc(id).get();
+    console.log('docRef', docRef.data())
+    return docRef.data() as Owner;
+  }
+  
+  export async function updateOwner(owner: Owner): Promise<void> {
+    await db.collection("Owner").doc(owner.id).update(owner);
+  }
